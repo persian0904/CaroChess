@@ -79,7 +79,7 @@
 <body>
   <div class="app">
     <div class="app-container">
-      <h2 class="title">Cờ Caro</h2>
+      <h2 class="title">Caro Chess</h2>
 
     </div>
 
@@ -353,9 +353,9 @@
 
       function updateStatus() {
         if (theWinner) {
-          statusElement.textContent = `Chiến thắng: ${theWinner}`;
+          statusElement.textContent = `Win: ${theWinner}`;
         } else {
-          statusElement.textContent = `Người chơi: ${xIsNext ? 'X' : 'O'}`;
+          statusElement.textContent = `Playser: ${xIsNext ? 'X' : 'O'}`;
         }
       }
 
