@@ -8,11 +8,15 @@ It serves as an excellent project for those learning web development, demonstrat
 
 ## Installation
 
-To run this project locally, clone this repository and open the `index.html` file in your web browser.
+To run this project locally, clone this repository and open the `CaroChess.html` file in your web browser.
 
 ```bash  
 git clone https://github.com/persian0904/CaroChess.git
 cd CaroChess  
 open caroChess.html
 
-contact: https://www.facebook.com/NghiemThanhTuan
+**contact: https://www.facebook.com/NghiemThanhTuan
+**
+
+## Play Online
+You can play the game directly here: [Caro Game Online](https://sensitive-cow.static.domains/carochess)
