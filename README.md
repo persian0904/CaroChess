@@ -14,3 +14,5 @@ To run this project locally, clone this repository and open the `index.html` fil
 git clone https://github.com/persian0904/CaroChess.git
 cd CaroChess  
 open caroChess.html
+
+contact: https://www.facebook.com/NghiemThanhTuan
