@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Caro Offline FINAL – Wood Edition</title>
+<title>Karo Offline PRO – Wood Edition</title>
 
 <style>
 body{
@@ -16,7 +16,7 @@ body{
   font-weight:600;
 }
 
-/* ===== BOARD WOOD ===== */
+/* ===== WOOD BOARD ===== */
 .game{
   margin-top:12px;
   display:inline-block;
@@ -82,7 +82,7 @@ body{
   cursor:pointer;
 }
 .button:hover{background:#e6cfa3}
-.status{min-width:170px;text-align:left}
+.status{min-width:180px;text-align:left}
 
 #moveHistory{
   margin-top:10px;
@@ -114,16 +114,16 @@ select{
 
 <body>
 <div class="app">
-<h2>🎮 Cờ Caro Offline FINAL – Wood</h2>
+<h2>🎮 Karo Wood</h2>
 
 <div class="controls">
   <div id="status" class="status"></div>
 
-  <label>📐 Bàn:
+  <label>📐 Board:
     <select id="sizeSelect">
-      <option value="10">10x10</option>
-      <option value="15">15x15</option>
-      <option value="20">20x20</option>
+      <option value="10">10 × 10</option>
+      <option value="15">15 × 15</option>
+      <option value="20">20 × 20</option>
     </select>
   </label>
 
@@ -189,8 +189,8 @@ function render(){
 
 function updateStatus(){
   statusEl.textContent = winner
-    ? "🏆 " + (winner==="X"?"🔴 Đỏ":"⚫ Đen") + " thắng"
-    : "👉 Lượt: " + (xIsNext?"🔴 Đỏ":"⚫ Đen");
+    ? "🏆 " + (winner==="X" ? "🔴 Red" : "⚫ Black") + " wins"
+    : "👉 Turn: " + (xIsNext ? "🔴 Red" : "⚫ Black");
 }
 
 /* ===== GAME LOGIC ===== */
@@ -226,7 +226,7 @@ function checkWin(r,c){
 
 /* ===== HISTORY ===== */
 function toCoord(r,c){
-  return String.fromCharCode(65+c) + (r+1);
+  return String.fromCharCode(65+c)+(r+1);
 }
 
 function saveHistory(r,c){
@@ -241,11 +241,11 @@ function saveHistory(r,c){
 }
 
 function updateHistory(){
-  historyEl.innerHTML = "<b>📜 Lịch sử nước đi</b><br>";
+  historyEl.innerHTML = "<b>📜 Move History</b><br>";
   history.forEach((h,i)=>{
     const div = document.createElement("div");
-    div.className = "move" + (i===historyIndex ? " active" : "");
-    div.textContent = (i+1)+". "+(i%2===0?"🔴 ":"⚫ ")+h.move;
+    div.className = "move" + (i===historyIndex?" active":"");
+    div.textContent = (i+1)+". "+(i%2===0?"🔴 Red ":"⚫ Black ")+h.move;
     div.onclick = ()=>{
       historyIndex = i;
       restore();
