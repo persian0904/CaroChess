@@ -6,6 +6,16 @@ The implementation is simplistic yet effective, showcasing essential programming
 
 It serves as an excellent project for those learning web development, demonstrating how to integrate various web technologies seamlessly. The source code is available for review and experimentation, allowing developers to modify and enhance the game's functionalities and aesthetics further.
 
+**Pro version:
+**
+✔ Single HTML file
+✔ 100% offline
+✔ Wooden board with glossy stones
+✔ Selectable board size
+✔ Click move history to jump back to that move
+✔ Undo / Redo
+✔ Refresh = full reset
+
 ## Installation
 
 To run this project locally, clone this repository and open the `CaroChess.html` or 'docs/index.html' file in your web browser.
