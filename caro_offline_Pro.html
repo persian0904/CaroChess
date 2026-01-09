@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Karo Offline PRO – Wood Edition</title>
+<title>Karo Offline PRO – Wood Edition (Zoom)</title>
 
 <style>
 body{
@@ -26,21 +26,25 @@ body{
   box-shadow:
     inset 0 0 10px rgba(0,0,0,.35),
     0 8px 16px rgba(0,0,0,.45);
+  transform-origin: top center;
+  transition: transform .15s ease;
+  touch-action: none;
 }
 .board-row{display:flex;justify-content:center}
 .square{
-  width:28px;
-  height:28px;
+  width:42px;
+  height:42px;
   border:1px solid rgba(0,0,0,.4);
   background:rgba(255,255,255,.15);
   cursor:pointer;
   padding:0;
+  touch-action: manipulation;
 }
 
 /* ===== STONES ===== */
 .stone{
-  width:20px;
-  height:20px;
+  width:32px;
+  height:32px;
   border-radius:50%;
   margin:auto;
   animation:drop .15s ease-out;
@@ -48,16 +52,10 @@ body{
 .red{
   background:radial-gradient(circle at 30% 30%,#ffd6d6,#b30000 70%);
   border:2px solid #660000;
-  box-shadow:
-    inset -2px -2px 4px rgba(0,0,0,.4),
-    0 2px 4px rgba(0,0,0,.4);
 }
 .black{
   background:radial-gradient(circle at 30% 30%,#777,#000 70%);
   border:2px solid #000;
-  box-shadow:
-    inset -2px -2px 4px rgba(255,255,255,.15),
-    0 2px 4px rgba(0,0,0,.6);
 }
 @keyframes drop{
   from{transform:scale(.3);opacity:0}
@@ -127,9 +125,11 @@ select{
     </select>
   </label>
 
-  <button class="button" id="restart">⟳</button>
   <button class="button" id="undo">↶</button>
   <button class="button" id="redo">↷</button>
+  <button class="button" id="zoomOut">➖</button>
+  <button class="button" id="zoomIn">➕</button>
+  <button class="button" id="restart">⟳</button>
 </div>
 
 <div id="board" class="game"></div>
@@ -144,10 +144,22 @@ let winner = null;
 let history = [];
 let historyIndex = -1;
 
+/* ===== ZOOM ===== */
+let zoomLevel = 1;
+const ZOOM_MIN = 0.6;
+const ZOOM_MAX = 1.6;
+const ZOOM_STEP = 0.1;
+let lastTouchDistance = null;
+let lastTapTime = 0;
+
 const boardEl = document.getElementById("board");
 const statusEl = document.getElementById("status");
 const historyEl = document.getElementById("moveHistory");
 const sizeSelect = document.getElementById("sizeSelect");
+
+function applyZoom(){
+  boardEl.style.transform = `scale(${zoomLevel})`;
+}
 
 /* ===== INIT ===== */
 function init(){
@@ -156,6 +168,8 @@ function init(){
   historyIndex = -1;
   xIsNext = true;
   winner = null;
+  zoomLevel = 1;
+  applyZoom();
   render();
   updateStatus();
   updateHistory();
@@ -233,7 +247,6 @@ function saveHistory(r,c){
   history = history.slice(0, historyIndex+1);
   history.push({
     squares: JSON.parse(JSON.stringify(squares)),
-    xIsNext,
     move: toCoord(r,c)
   });
   historyIndex++;
@@ -257,8 +270,8 @@ function updateHistory(){
 function restore(){
   const h = history[historyIndex];
   squares = JSON.parse(JSON.stringify(h.squares));
-  xIsNext = h.xIsNext;
   winner = null;
+  xIsNext = (historyIndex + 1) % 2 === 0;
   render();
   updateStatus();
   updateHistory();
@@ -272,6 +285,57 @@ document.getElementById("redo").onclick = ()=>{
   if(historyIndex<history.length-1){ historyIndex++; restore(); }
 };
 document.getElementById("restart").onclick = init;
+
+document.getElementById("zoomIn").onclick = ()=>{
+  if(zoomLevel < ZOOM_MAX){
+    zoomLevel += ZOOM_STEP;
+    applyZoom();
+  }
+};
+document.getElementById("zoomOut").onclick = ()=>{
+  if(zoomLevel > ZOOM_MIN){
+    zoomLevel -= ZOOM_STEP;
+    applyZoom();
+  }
+};
+
+/* ===== TOUCH ZOOM ===== */
+function getTouchDistance(t1, t2){
+  const dx = t1.clientX - t2.clientX;
+  const dy = t1.clientY - t2.clientY;
+  return Math.sqrt(dx*dx + dy*dy);
+}
+
+boardEl.addEventListener("touchstart", e=>{
+  if(e.touches.length === 2){
+    lastTouchDistance = getTouchDistance(e.touches[0], e.touches[1]);
+  }
+});
+
+boardEl.addEventListener("touchmove", e=>{
+  if(e.touches.length === 2 && lastTouchDistance){
+    e.preventDefault();
+    const newDist = getTouchDistance(e.touches[0], e.touches[1]);
+    zoomLevel += (newDist - lastTouchDistance) / 200;
+    zoomLevel = Math.max(ZOOM_MIN, Math.min(ZOOM_MAX, zoomLevel));
+    applyZoom();
+    lastTouchDistance = newDist;
+  }
+},{passive:false});
+
+boardEl.addEventListener("touchend", ()=>{
+  lastTouchDistance = null;
+});
+
+/* ===== DOUBLE TAP RESET ===== */
+boardEl.addEventListener("touchend", ()=>{
+  const now = Date.now();
+  if(now - lastTapTime < 300){
+    zoomLevel = 1;
+    applyZoom();
+  }
+  lastTapTime = now;
+});
 
 init();
 </script>
